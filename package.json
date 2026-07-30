@@ -14,6 +14,7 @@
     "README.md",
     "LICENSE"
   ],
+  "type": "commonjs",
   "scripts": {
     "start": "node bin/gitupdate.js",
     "list": "node bin/gitupdate.js --list"
@@ -34,14 +35,14 @@
   "os": [
     "darwin"
   ],
-  "license": "MIT",
-  "author": "Nambeom Seok",
+  "license": "Apache-2.0",
+  "author": "info-sum",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/info-sum/gitupdate.git"
+    "url": "git+https://github.com/info-sum/git-update.git"
   },
-  "homepage": "https://github.com/info-sum/gitupdate#readme",
+  "homepage": "https://github.com/info-sum/git-update#readme",
   "bugs": {
-    "url": "https://github.com/info-sum/gitupdate/issues"
+    "url": "https://github.com/info-sum/git-update/issues"
   }
 }

@@ -1,7 +1,7 @@
 #!/bin/sh
 # Git Update 설치 스크립트.
 #
-#   curl -fsSL https://raw.githubusercontent.com/info-sum/gitupdate/main/install.sh | sh
+#   curl -fsSL https://raw.githubusercontent.com/info-sum/git-update/main/install.sh | sh
 #
 # 하는 일:
 #   1) 저장소를 ~/.gitupdate 에 clone (이미 있으면 최신으로 갱신)
@@ -15,7 +15,7 @@
 
 set -eu
 
-REPO="${GITUPDATE_REPO:-https://github.com/info-sum/gitupdate.git}"
+REPO="${GITUPDATE_REPO:-https://github.com/info-sum/git-update.git}"
 DEST="${GITUPDATE_HOME:-$HOME/.gitupdate}"
 BIN_DIR="${GITUPDATE_BIN:-$HOME/.local/bin}"
 BRANCH="${GITUPDATE_BRANCH:-main}"
