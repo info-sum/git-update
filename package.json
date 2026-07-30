@@ -1,0 +1,47 @@
+{
+  "name": "gitupdate",
+  "version": "1.0.0",
+  "description": "로컬 git 저장소를 한 화면에 모아 버튼 하나로 pull / rebase / merge / stash 하는 가벼운 GUI (macOS)",
+  "bin": {
+    "gitupdate": "bin/gitupdate.js"
+  },
+  "files": [
+    "bin/",
+    "gitupdate/",
+    "main.py",
+    "GitUpdate.command",
+    "install.sh",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "start": "node bin/gitupdate.js",
+    "list": "node bin/gitupdate.js --list"
+  },
+  "keywords": [
+    "git",
+    "gui",
+    "pull",
+    "rebase",
+    "merge",
+    "stash",
+    "repository-manager",
+    "macos"
+  ],
+  "engines": {
+    "node": ">=14"
+  },
+  "os": [
+    "darwin"
+  ],
+  "license": "MIT",
+  "author": "Nambeom Seok",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/info-sum/gitupdate.git"
+  },
+  "homepage": "https://github.com/info-sum/gitupdate#readme",
+  "bugs": {
+    "url": "https://github.com/info-sum/gitupdate/issues"
+  }
+}
