@@ -19,7 +19,7 @@ from typing import Dict, List, Optional
 from urllib.parse import parse_qs, urlparse
 
 from . import APP_NAME, __version__
-from .config import PULL_STRATEGIES, Config, display_path
+from .config import PULL_STRATEGIES, THEMES, Config, display_path
 from .git_ops import (
     PULL_MODES,
     STASH_REF_RE,
@@ -42,6 +42,13 @@ from .scanner import find_repos
 
 WEB_DIR = Path(__file__).resolve().parent / "web"
 IDLE_TIMEOUT = 900.0  # 브라우저에서 15분간 아무 요청이 없으면 서버 종료
+
+# 화면이 쓰는 정적 파일. 경로를 조립하지 않고 이 표에 있는 것만 그대로 내보낸다.
+STATIC_FILES = {
+    "/tokens.css": "text/css; charset=utf-8",
+    "/quiet-observer.css": "text/css; charset=utf-8",
+    "/fonts/Cafe24PROUP.otf": "font/otf",
+}
 
 
 def repo_payload(st: RepoStatus, busy: Optional[str], result: Optional[dict]) -> dict:
@@ -119,6 +126,8 @@ class AppState:
                     "strategies": PULL_STRATEGIES,
                     "autostash": self.cfg.autostash,
                     "fetch_on_start": self.cfg.fetch_on_start,
+                    "theme": self.cfg.theme,
+                    "themes": THEMES,
                 },
             }
 
@@ -390,7 +399,17 @@ class Handler(BaseHTTPRequestHandler):
                 self._send(500, b"index.html missing", "text/plain")
                 return
             html = html.replace("__TOKEN__", self.server.token)  # type: ignore[attr-defined]
+            # 첫 페인트 전에 밝기를 확정해 화면이 번쩍이지 않게 한다.
+            html = html.replace("__THEME__", self.state.cfg.theme)
             self._send(200, html.encode("utf-8"), "text/html; charset=utf-8")
+            return
+        if url.path in STATIC_FILES:
+            try:
+                blob = (WEB_DIR / url.path[1:]).read_bytes()
+            except OSError:
+                self._send(404, b"asset missing", "text/plain; charset=utf-8")
+                return
+            self._send(200, blob, STATIC_FILES[url.path])
             return
         if url.path == "/api/state":
             self._json(self.state.snapshot())
@@ -477,6 +496,8 @@ class Handler(BaseHTTPRequestHandler):
                 pass
         if body.get("pull_strategy") in PULL_STRATEGIES:
             cfg.pull_strategy = body["pull_strategy"]
+        if body.get("theme") in THEMES:
+            cfg.theme = body["theme"]
         if body.get("autostash") is not None:
             cfg.autostash = bool(body["autostash"])
         if body.get("fetch_on_start") is not None:

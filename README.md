@@ -61,7 +61,7 @@ Finder 에서 **`GitUpdate.command` 더블클릭**으로도 실행됩니다. Doc
 
 ![보관 창](docs/screenshot-stash.png)
 
-시스템 설정을 따라 다크 모드로 전환됩니다.
+기본은 밝은 화면입니다. 왼쪽 아래 밝기 버튼을 누르면 `밝게 → 어둡게 → 시스템 따라` 순서로 바뀌고, 고른 값은 설정 파일에 남아 다시 켜도 유지됩니다.
 
 ![다크 모드](docs/screenshot-dark.png)
 
@@ -154,6 +154,7 @@ Finder 에서 **`GitUpdate.command` 더블클릭**으로도 실행됩니다. Doc
 | 업데이트 방식 | `ff-only` | 위 표 참고 |
 | 자동 보관 | 켜짐 | `--autostash` |
 | 시작할 때 원격 확인 | 켜짐 | 정확한 "받을 커밋" 수를 바로 보여줍니다. 저장소가 많으면 몇 초 걸립니다. |
+| 화면 밝기 | `밝게` | 왼쪽 아래 밝기 버튼으로 바꿉니다. `밝게` / `어둡게` / `시스템 따라` |
 
 다른 설정 파일을 쓰려면 `GITUPDATE_CONFIG_DIR=/path/to/dir gitupdate` 로 실행하면 됩니다.
 
@@ -195,7 +196,11 @@ git-update/
     ├── scanner.py         저장소 탐색
     ├── git_ops.py         git 명령 래퍼 (상태·pull·stash·메시지 해석)
     ├── server.py          로컬 HTTP 서버 + 작업 큐
-    └── web/index.html     화면 전체 (HTML+CSS+JS 한 파일, 프레임워크 없음)
+    └── web/
+        ├── index.html         화면 구조 + 동작 (프레임워크 없음)
+        ├── tokens.css          디자인 토큰 (Quiet Observer)
+        ├── quiet-observer.css  컴포넌트 스타일
+        └── fonts/              Cafe24 PRO UP
 ```
 
 프런트엔드는 프레임워크·빌드 단계·`node_modules` 가 없습니다. 상태는 `/api/state` 를 폴링(작업 중 0.9초, 평상시 3.5초)해서 받고, 저장소 경로를 키로 DOM 을 재사용해 바뀐 부분만 갱신합니다.

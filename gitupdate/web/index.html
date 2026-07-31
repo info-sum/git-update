@@ -4,376 +4,163 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="gitupdate-token" content="__TOKEN__">
-<meta name="color-scheme" content="light dark">
+<meta name="gitupdate-theme" content="__THEME__">
 <title>Git Update</title>
+<script>
+/* 밝기는 기본이 light. 스타일시트보다 먼저 확정해 첫 페인트에서 번쩍이지 않게 한다. */
+(function () {
+  var pref = document.querySelector('meta[name=gitupdate-theme]').content;
+  var dark = pref === "dark" ||
+    (pref === "auto" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  if (dark) document.documentElement.classList.add("dark");
+})();
+</script>
 <style>
-:root{
-  --bg:#faf9f5; --bg-sunk:#f2f0e8; --surface:#ffffff; --surface-2:#f7f6f1;
-  --border:#e6e2d7; --border-strong:#d8d3c5;
-  --text:#191919; --text-2:#5d5b55; --text-3:#8f8d85;
-  --accent:#d97757; --accent-hover:#c4623f; --accent-soft:#fbeee7; --accent-line:#f0d3c4;
-  --green:#4a7c59; --green-soft:#eef4ef;
-  --amber:#a9762c; --amber-soft:#fbf2e2;
-  --red:#b4453a; --red-soft:#fbedeb;
-  --slate:#6b7a8f; --slate-soft:#eef1f5;
-  --gray:#82807a; --gray-soft:#f1f0ea;
-  --shadow-sm:0 1px 2px rgba(25,25,25,.05);
-  --shadow-md:0 4px 16px -4px rgba(25,25,25,.12), 0 1px 3px rgba(25,25,25,.06);
-  --radius:14px;
-  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Apple SD Gothic Neo","Pretendard",system-ui,sans-serif;
-  --serif:ui-serif,"Iowan Old Style","Apple Garamond",Georgia,serif;
-  --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
-}
-@media (prefers-color-scheme:dark){
-  :root{
-    --bg:#1f1e1c; --bg-sunk:#191817; --surface:#282725; --surface-2:#2f2e2b;
-    --border:#3a3835; --border-strong:#4a4844;
-    --text:#f5f4ee; --text-2:#b8b5ac; --text-3:#8b8880;
-    --accent:#e08a68; --accent-hover:#eb9c7c; --accent-soft:#3a2a22; --accent-line:#5a4033;
-    --green:#7fb08d; --green-soft:#25302a;
-    --amber:#d5a457; --amber-soft:#332b1d;
-    --red:#e08379; --red-soft:#38241f;
-    --slate:#9aa9bd; --slate-soft:#252b33;
-    --gray:#a3a09a; --gray-soft:#2c2b28;
-    --shadow-sm:0 1px 2px rgba(0,0,0,.3);
-    --shadow-md:0 6px 20px -6px rgba(0,0,0,.5), 0 1px 3px rgba(0,0,0,.3);
-  }
-}
-*{box-sizing:border-box}
-html,body{margin:0;padding:0}
-body{
-  background:var(--bg); color:var(--text); font-family:var(--sans);
-  font-size:14px; line-height:1.5; -webkit-font-smoothing:antialiased;
-  padding-bottom:96px;
-}
-button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer}
-input,select{font-family:inherit;font-size:inherit;color:inherit}
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
-
-/* ---------- 상단 ---------- */
-.top{
-  position:sticky; top:0; z-index:30; background:var(--bg);
-  background:color-mix(in srgb,var(--bg) 88%,transparent);
-  backdrop-filter:saturate(1.4) blur(12px); border-bottom:1px solid var(--border);
-}
-.progress{height:2px;background:transparent;overflow:hidden}
-.progress.on{background:var(--accent-line)}
-.progress.on::after{
-  content:""; display:block; height:2px; width:35%; background:var(--accent);
-  animation:slide 1.15s ease-in-out infinite;
-}
-@keyframes slide{0%{transform:translateX(-100%)}100%{transform:translateX(320%)}}
-.wrap{max-width:1060px;margin:0 auto;padding:0 22px}
-.head{display:flex;align-items:flex-end;gap:18px;padding:18px 0 14px}
-.brand h1{
-  font-family:var(--serif); font-size:26px; font-weight:600; letter-spacing:-.02em;
-  margin:0 0 2px;
-}
-.brand p{margin:0;color:var(--text-2);font-size:12.5px;letter-spacing:.01em}
-.head .grow{flex:1}
-.acts{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
-
-.btn{
-  display:inline-flex;align-items:center;gap:7px;border-radius:10px;padding:8px 13px;
-  border:1px solid var(--border-strong); background:var(--surface); color:var(--text);
-  font-size:13px; font-weight:500; box-shadow:var(--shadow-sm);
-  transition:background .14s ease,border-color .14s ease,transform .14s ease,opacity .14s;
-  white-space:nowrap;
-}
-.btn:hover{background:var(--surface-2)}
-.btn:active{transform:translateY(1px)}
-.btn[disabled]{opacity:.45;cursor:not-allowed;box-shadow:none}
-.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 1px 2px rgba(217,119,87,.35)}
-.btn.primary:hover{background:var(--accent-hover);border-color:var(--accent-hover)}
-.btn.quiet{background:transparent;border-color:transparent;box-shadow:none;color:var(--text-2)}
-.btn.quiet:hover{background:var(--surface-2);color:var(--text)}
-.btn.icon{padding:8px;width:34px;justify-content:center}
-.btn svg{width:15px;height:15px;flex:none}
-
-/* ---------- 필터 ---------- */
-.tools{display:flex;gap:10px;align-items:center;padding:0 0 14px;flex-wrap:wrap}
-.search{position:relative;flex:1;min-width:200px;max-width:330px}
-.search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--text-3)}
-.search input{
-  width:100%;padding:9px 12px 9px 33px;border-radius:10px;border:1px solid var(--border-strong);
-  background:var(--surface);box-shadow:var(--shadow-sm);
-}
-.search input::placeholder{color:var(--text-3)}
-.chips{display:flex;gap:5px;background:var(--bg-sunk);padding:3px;border-radius:11px}
-.chip{
-  border:0;background:transparent;padding:6px 11px;border-radius:8px;font-size:12.5px;
-  color:var(--text-2);font-weight:500;transition:background .14s,color .14s;
-}
-.chip:hover{color:var(--text)}
-.chip.on{background:var(--surface);color:var(--text);box-shadow:var(--shadow-sm)}
-.chip b{font-variant-numeric:tabular-nums;font-weight:600;margin-left:5px;color:var(--text-3)}
-.chip.on b{color:var(--accent)}
-.spacer{flex:1}
-.field{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--text-2)}
-.field select{
-  padding:8px 10px;border-radius:10px;border:1px solid var(--border-strong);
-  background:var(--surface);box-shadow:var(--shadow-sm);font-size:13px;
-}
-
-/* ---------- 목록 ---------- */
-main{max-width:1060px;margin:0 auto;padding:18px 22px 0}
-.list{display:flex;flex-direction:column;gap:9px}
-.repo{
-  position:relative;display:flex;align-items:center;gap:14px;
-  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
-  padding:14px 16px 14px 18px;box-shadow:var(--shadow-sm);overflow:hidden;
-  transition:border-color .16s ease,box-shadow .16s ease,transform .16s ease;
-}
-.repo:hover{border-color:var(--border-strong);box-shadow:var(--shadow-md);transform:translateY(-1px)}
-.repo::before{
-  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gray);opacity:.85;
-}
-.repo[data-state="behind"]::before{background:var(--accent)}
-.repo[data-state="diverged"]::before{background:var(--amber)}
-.repo[data-state="clean"]::before{background:var(--green)}
-.repo[data-state="dirty"]::before{background:var(--amber)}
-.repo[data-state="ahead"]::before{background:var(--slate)}
-.repo[data-state="error"]::before{background:var(--red)}
-.repo[data-state="loading"]::before{background:var(--border-strong)}
-.repo.busy{border-color:var(--accent-line);background:linear-gradient(var(--accent-soft),var(--accent-soft)) padding-box}
-
-.body{flex:1;min-width:0}
-.row1{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
-.name{font-size:15px;font-weight:600;letter-spacing:-.01em;margin:0}
-.pill{
-  font-size:11px;font-weight:600;padding:2.5px 8px;border-radius:999px;
-  background:var(--gray-soft);color:var(--gray);letter-spacing:.01em;white-space:nowrap;
-}
-.pill.behind{background:var(--accent-soft);color:var(--accent)}
-.pill.diverged{background:var(--amber-soft);color:var(--amber)}
-.pill.clean{background:var(--green-soft);color:var(--green)}
-.pill.dirty{background:var(--amber-soft);color:var(--amber)}
-.pill.ahead{background:var(--slate-soft);color:var(--slate)}
-.pill.error{background:var(--red-soft);color:var(--red)}
-.meta{margin-top:3px;font-size:12.5px;color:var(--text-2);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.meta .sep{color:var(--border-strong)}
-.meta .num{font-variant-numeric:tabular-nums;font-weight:600}
-.meta .down{color:var(--accent)}
-.meta .up{color:var(--slate)}
-.path{
-  margin-top:5px;font-family:var(--mono);font-size:11.5px;color:var(--text-3);
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-}
-.note{
-  margin-top:8px;font-size:12.5px;padding:8px 10px;border-radius:9px;
-  background:var(--surface-2);color:var(--text-2);border:1px solid var(--border);
-  display:flex;flex-direction:column;gap:7px;align-items:flex-start;line-height:1.45;
-}
-.noteacts{display:flex;gap:6px;flex-wrap:wrap}
-.btn.tiny{padding:4px 10px;font-size:12px;border-radius:8px;box-shadow:none}
-.btn.danger{color:var(--red);border-color:var(--border-strong)}
-.btn.danger:hover{background:var(--red-soft);border-color:var(--red)}
-.chipmini{
-  border:1px solid var(--border-strong);background:var(--surface-2);color:var(--text-2);
-  font-size:11.5px;padding:1px 8px;border-radius:999px;font-weight:500;
-}
-.chipmini:hover{border-color:var(--accent);color:var(--accent)}
-.muted{color:var(--text-3);font-size:12.5px;margin:0;padding:6px 2px}
-.note[hidden]{display:none}   /* display:flex 가 hidden 속성을 덮어쓰는 것 방지 */
-.note.ok{background:var(--green-soft);color:var(--green);border-color:transparent}
-.note.warn{background:var(--amber-soft);color:var(--amber);border-color:transparent}
-.note.err{background:var(--red-soft);color:var(--red);border-color:transparent}
-.note code{font-family:var(--mono);font-size:11.5px}
-.side{display:flex;align-items:center;gap:6px;flex:none}
-
-.spin{width:14px;height:14px;border-radius:50%;border:2px solid currentColor;border-top-color:transparent;animation:spin .7s linear infinite;flex:none}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* 스켈레톤 */
-.skel{height:74px;border-radius:var(--radius);border:1px solid var(--border);background:
-  linear-gradient(90deg,var(--surface) 0%,var(--surface-2) 40%,var(--surface) 80%);
-  background-size:300% 100%;animation:shimmer 1.4s ease-in-out infinite}
-@keyframes shimmer{0%{background-position:120% 0}100%{background-position:-40% 0}}
-
-.empty{
-  text-align:center;padding:60px 20px;color:var(--text-2);
-  border:1px dashed var(--border-strong);border-radius:var(--radius);background:var(--surface);
-}
-.empty h3{font-family:var(--serif);font-size:19px;font-weight:600;margin:0 0 6px;color:var(--text)}
-.empty p{margin:0 0 16px;font-size:13px}
-
-/* ---------- 메뉴 ---------- */
-.menu{
-  position:absolute;z-index:60;min-width:186px;padding:5px;border-radius:12px;
-  background:var(--surface);border:1px solid var(--border-strong);box-shadow:var(--shadow-md);
-}
-.menu button{
-  display:flex;align-items:center;gap:9px;width:100%;border:0;background:transparent;
-  padding:8px 10px;border-radius:8px;font-size:13px;text-align:left;color:var(--text);
-}
-.menu button:hover{background:var(--surface-2)}
-.menu hr{border:0;border-top:1px solid var(--border);margin:5px 2px}
-.menu svg{width:14px;height:14px;color:var(--text-3)}
-
-/* ---------- 기록 ---------- */
-.logwrap{max-width:1060px;margin:22px auto 0;padding:0 22px}
-.logcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm)}
-.loghead{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;user-select:none}
-.loghead h2{font-size:12.5px;font-weight:600;margin:0;letter-spacing:.02em;color:var(--text-2);text-transform:uppercase}
-.loghead .count{font-size:11.5px;color:var(--text-3);font-variant-numeric:tabular-nums}
-.loghead .chev{margin-left:auto;color:var(--text-3);transition:transform .18s}
-.logcard.open .chev{transform:rotate(180deg)}
-.logbody{display:none;max-height:270px;overflow:auto;padding:2px 14px 14px;font-family:var(--mono);font-size:11.5px;line-height:1.65}
-.logcard.open .logbody{display:block}
-.logline{display:flex;gap:9px;white-space:pre-wrap;word-break:break-word}
-.logline .ts{color:var(--text-3);flex:none}
-.logline.ok .msg{color:var(--green)}
-.logline.warn .msg{color:var(--amber)}
-.logline.err .msg{color:var(--red)}
-.logline.detail .msg{color:var(--text-3)}
-
-/* ---------- 하단 바 ---------- */
-.footer{
-  position:fixed;bottom:0;left:0;right:0;z-index:25;background:var(--bg);
-  background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(10px);
-  border-top:1px solid var(--border);
-}
-.footer .inner{max-width:1060px;margin:0 auto;padding:9px 22px;display:flex;align-items:center;gap:12px}
-.status{font-size:12.5px;color:var(--text-2);display:flex;align-items:center;gap:8px;min-width:0}
-.status .dot{width:7px;height:7px;border-radius:50%;background:var(--green);flex:none}
-.status.working .dot{background:var(--accent);animation:pulse 1.1s ease-in-out infinite}
-@keyframes pulse{50%{opacity:.35}}
-.footer .grow{flex:1}
-.footer .hint{font-size:11.5px;color:var(--text-3);font-family:var(--mono)}
-
-/* ---------- 모달 ---------- */
-dialog{
-  border:1px solid var(--border-strong);border-radius:18px;padding:0;max-width:560px;width:calc(100% - 40px);
-  background:var(--surface);color:var(--text);box-shadow:0 24px 60px -12px rgba(0,0,0,.3);
-}
-dialog::backdrop{background:rgba(25,25,25,.34);backdrop-filter:blur(2px)}
-.dlg-head{padding:20px 22px 6px}
-.dlg-head h2{font-family:var(--serif);font-size:20px;margin:0 0 3px;font-weight:600}
-.dlg-head p{margin:0;font-size:12.5px;color:var(--text-2)}
-.dlg-body{padding:14px 22px 4px;max-height:min(62vh,520px);overflow:auto}
-.dlg-foot{display:flex;gap:8px;justify-content:flex-end;padding:14px 22px 20px}
-.group{margin-bottom:18px}
-.group>label{display:block;font-size:12px;font-weight:600;color:var(--text-2);margin-bottom:7px;letter-spacing:.02em}
-.rootlist{display:flex;flex-direction:column;gap:6px;margin-bottom:9px}
-.root{
-  display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:10px;
-  background:var(--surface-2);border:1px solid var(--border);font-family:var(--mono);font-size:12px;
-}
-.root span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.root button{border:0;background:transparent;color:var(--text-3);padding:2px;border-radius:6px;display:flex}
-.root button:hover{color:var(--red);background:var(--red-soft)}
-.inline{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
-.inline input[type=number]{width:74px;padding:8px 10px;border-radius:10px;border:1px solid var(--border-strong);background:var(--surface)}
-.inline input[type=text]{flex:1;min-width:220px;padding:8px 11px;border-radius:10px;border:1px solid var(--border-strong);background:var(--surface);font-family:var(--mono);font-size:12px}
-.check{display:flex;gap:9px;align-items:flex-start;padding:9px 0;font-size:13px;color:var(--text)}
-.check input{margin:2px 0 0;accent-color:var(--accent);width:16px;height:16px}
-.check small{display:block;color:var(--text-3);font-size:11.5px;margin-top:2px}
-
-/* 보관 목록 */
-.stashlist{display:flex;flex-direction:column;gap:6px}
-.stashitem{
-  display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:11px;
-  background:var(--surface-2);border:1px solid var(--border);
-}
-.stashitem .si{flex:1;min-width:0}
-.stashitem .si-msg{font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.stashitem .si-meta{font-family:var(--mono);font-size:11px;color:var(--text-3);margin-top:2px}
-.stashitem .si-acts{display:flex;gap:5px;flex:none}
-
-/* ---------- 토스트 ---------- */
-.toasts{position:fixed;right:20px;bottom:64px;z-index:80;display:flex;flex-direction:column;gap:8px;align-items:flex-end}
-.toast{
-  display:flex;gap:9px;align-items:flex-start;max-width:380px;padding:11px 13px;border-radius:12px;
-  background:var(--surface);border:1px solid var(--border-strong);box-shadow:var(--shadow-md);
-  font-size:12.5px;animation:rise .22s ease;
-}
-@keyframes rise{from{opacity:0;transform:translateY(8px)}}
-.toast.ok{border-left:3px solid var(--green)}
-.toast.warn{border-left:3px solid var(--amber)}
-.toast.err{border-left:3px solid var(--red)}
-.toast strong{display:block;font-size:12.5px;margin-bottom:1px}
-.toast span{color:var(--text-2)}
-.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-@media (max-width:720px){
-  .head{flex-direction:column;align-items:flex-start;gap:12px}
-  .acts{justify-content:flex-start}
-  .repo{flex-direction:column;align-items:flex-start}
-  .side{width:100%;justify-content:flex-end}
+/* 토큰 인증이 붙은 주소라서 폰트 선언은 토큰이 치환되는 이 블록에 둔다. */
+@font-face{
+  font-family:"Cafe24 PRO UP";
+  src:url("/fonts/Cafe24PROUP.otf?t=__TOKEN__") format("opentype");
+  font-weight:100 900;   /* 단일 굵기 서체 — 가짜 볼드를 만들지 않는다 */
+  font-style:normal;
+  font-display:swap;
 }
 </style>
+<link rel="stylesheet" href="/tokens.css?t=__TOKEN__">
+<link rel="stylesheet" href="/quiet-observer.css?t=__TOKEN__">
 </head>
-<body>
-<div class="top">
-  <div class="progress" id="progress"></div>
-  <div class="wrap">
-    <div class="head">
-      <div class="brand">
-        <h1>Git Update</h1>
+<body data-view="repos">
+
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">G</span>
+      <span class="brand-name">Git Update</span>
+    </div>
+
+    <nav class="nav" id="nav" aria-label="화면">
+      <button class="nav-item on" data-view="repos" data-filter="all" aria-current="page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M7 21h10M8 8h5"/></svg>
+        <span>Repositories</span>
+      </button>
+      <button class="nav-item" data-view="repos" data-filter="update">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>
+        <span>Updates</span>
+        <b id="navcount"></b>
+      </button>
+      <button class="nav-item" data-view="activity">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2.5-6 3.5 12 2.5-6h5.5"/></svg>
+        <span>Activity</span>
+      </button>
+      <button class="nav-item" data-act="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2V21a2 2 0 1 1-4 0v-.1A1.7 1.7 0 0 0 7 19.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.7 1.7 0 0 0 3 15a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.7 7L4.6 7a2 2 0 1 1 2.8-2.8l.1.1A1.7 1.7 0 0 0 10 3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+        <span>Settings</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-foot">
+    <button class="railbtn" id="btn-theme"></button>
+
+    <button class="workspace" id="btn-workspace" title="검색 폴더와 업데이트 방식 설정 (,)">
+      <span class="avatar" aria-hidden="true">GU</span>
+      <span class="who">
+        <b>Workspace</b>
+        <small id="wsinfo">준비 중</small>
+      </span>
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>
+    </button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="progress" id="progress"></div>
+
+    <header class="head">
+      <div class="titles">
+        <h1 id="viewtitle">Repositories</h1>
         <p id="subtitle">저장소를 찾고 있습니다…</p>
       </div>
-      <div class="grow"></div>
       <div class="acts">
-        <button class="btn quiet" id="btn-refresh" title="다시 검색 (R)">
+        <div class="search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input id="search" type="search" placeholder="Search repositories…" autocomplete="off" spellcheck="false">
+          <kbd>/</kbd>
+        </div>
+        <button class="btn icon" id="btn-refresh" title="다시 검색 · 네트워크 없음 (R)" aria-label="다시 검색">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>
-          새로고침
         </button>
-        <button class="btn" id="btn-fetch" title="모든 저장소의 원격 상태 확인 (F)">
+        <button class="btn icon" id="btn-fetch" title="모든 저장소의 원격 상태 확인 (F)" aria-label="원격 확인">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>
-          원격 확인
         </button>
-        <button class="btn primary" id="btn-updateall">
+        <button class="btn accent" id="btn-updateall" title="받을 커밋이 있는 저장소를 한 번에 업데이트">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21V9"/><path d="M7 14l5 5 5-5"/><path d="M5 4h14"/></svg>
-          전체 업데이트<span id="allcount"></span>
-        </button>
-        <button class="btn icon" id="btn-settings" aria-label="설정" title="설정 (,)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2V21a2 2 0 1 1-4 0v-.1A1.7 1.7 0 0 0 7 19.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.7 1.7 0 0 0 3 15H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.7 7L4.6 7a2 2 0 1 1 2.8-2.8l.1.1A1.7 1.7 0 0 0 10 3V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+          <span>전체 업데이트</span><span id="allcount"></span>
         </button>
       </div>
-    </div>
-    <div class="tools">
-      <div class="search">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-        <input id="search" type="search" placeholder="이름 또는 경로 검색  ( / )" autocomplete="off" spellcheck="false">
-      </div>
-      <div class="chips" id="chips" role="tablist">
-        <button class="chip on" data-f="all" role="tab">전체<b></b></button>
-        <button class="chip" data-f="update" role="tab">업데이트<b></b></button>
-        <button class="chip" data-f="dirty" role="tab">로컬 변경<b></b></button>
-        <button class="chip" data-f="clean" role="tab">최신<b></b></button>
-        <button class="chip" data-f="issue" role="tab">확인 필요<b></b></button>
-      </div>
-      <div class="spacer"></div>
-      <label class="field">기본 방식
-        <select id="strategy" title="업데이트 버튼이 쓰는 기본 방식입니다. 저장소별로는 ⋯ 메뉴에서 rebase / merge 를 바로 실행할 수 있습니다.&#10;ff-only: 로컬 커밋이 있으면 중단 (안전)&#10;rebase: 원격 커밋 위로 내 커밋을 다시 쌓음&#10;merge: 병합 커밋을 만들어 합침">
-          <option value="ff-only">ff-only</option>
-          <option value="rebase">rebase</option>
-          <option value="merge">merge</option>
-        </select>
-      </label>
-    </div>
-  </div>
-</div>
+    </header>
 
-<main>
-  <div class="list" id="list"></div>
-  <div class="logwrap" style="padding:0">
-    <div class="logcard" id="logcard">
-      <div class="loghead" id="loghead" role="button" tabindex="0" aria-expanded="false">
-        <h2>실행 기록</h2>
-        <span class="count" id="logcount"></span>
-        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="16" height="16"><path d="m6 9 6 6 6-6"/></svg>
+    <section class="view view-repos">
+      <div class="tools">
+        <div class="chips" id="chips" role="tablist" aria-label="상태 필터">
+          <button class="chip on" data-f="all" role="tab" aria-selected="true">전체<b></b></button>
+          <button class="chip" data-f="update" role="tab" aria-selected="false">업데이트<b></b></button>
+          <button class="chip" data-f="dirty" role="tab" aria-selected="false">로컬 변경<b></b></button>
+          <button class="chip" data-f="clean" role="tab" aria-selected="false">최신<b></b></button>
+          <button class="chip" data-f="issue" role="tab" aria-selected="false">확인 필요<b></b></button>
+        </div>
+        <div class="spacer"></div>
+        <label class="field" for="sortby">정렬
+          <select id="sortby" title="목록 정렬 기준">
+            <option value="priority">우선순위</option>
+            <option value="recent">최근 확인</option>
+            <option value="name">이름</option>
+          </select>
+        </label>
+        <label class="field" for="strategy">기본 방식
+          <select id="strategy" title="업데이트 버튼이 쓰는 기본 방식입니다. 저장소별로는 ⋯ 메뉴에서 rebase / merge 를 바로 실행할 수 있습니다.&#10;ff-only: 로컬 커밋이 있으면 중단 (안전)&#10;rebase: 원격 커밋 위로 내 커밋을 다시 쌓음&#10;merge: 병합 커밋을 만들어 합침">
+            <option value="ff-only">ff-only</option>
+            <option value="rebase">rebase</option>
+            <option value="merge">merge</option>
+          </select>
+        </label>
+        <div class="segmented" id="layout" role="group" aria-label="목록 모양">
+          <button class="seg on" data-layout="list" aria-pressed="true" title="목록으로 보기" aria-label="목록으로 보기">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+          </button>
+          <button class="seg" data-layout="grid" aria-pressed="false" title="카드로 보기" aria-label="카드로 보기">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>
+          </button>
+        </div>
       </div>
-      <div class="logbody" id="logbody"></div>
-    </div>
-  </div>
-</main>
 
-<div class="footer">
-  <div class="inner">
-    <div class="status" id="status"><span class="dot"></span><span id="statustext">준비 중</span></div>
-    <div class="grow"></div>
-    <span class="hint" id="gitver"></span>
-    <button class="btn quiet" id="btn-quit" title="서버 종료">종료</button>
+      <div class="list" id="list"></div>
+
+      <div class="tally" id="tally">
+        <button class="tallyhead" id="tallyhead" aria-expanded="false" aria-controls="tallybody">
+          <span id="tallytitle">전체 0개</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="16" height="16"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="tallybody" id="tallybody"></div>
+      </div>
+    </section>
+
+    <section class="view view-activity">
+      <div class="logcard" id="logcard">
+        <div class="loghead">
+          <h2>실행 기록</h2>
+          <span class="count" id="logcount"></span>
+        </div>
+        <div class="logbody" id="logbody"></div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="status" id="status"><span class="dot"></span><span id="statustext">준비 중</span></div>
+      <div class="grow"></div>
+      <span class="hint" id="gitver"></span>
+      <button class="btn quiet tiny" id="btn-help" title="단축키 보기">도움말</button>
+      <button class="btn quiet tiny" id="btn-quit" title="서버 종료">종료</button>
+    </footer>
   </div>
 </div>
 
@@ -417,7 +204,7 @@ dialog::backdrop{background:rgba(25,25,25,.34);backdrop-filter:blur(2px)}
   </div>
   <div class="dlg-foot">
     <button class="btn" id="btn-cancel">취소</button>
-    <button class="btn primary" id="btn-save">저장하고 다시 검색</button>
+    <button class="btn accent" id="btn-save">저장하고 다시 검색</button>
   </div>
 </dialog>
 
@@ -431,7 +218,7 @@ dialog::backdrop{background:rgba(25,25,25,.34);backdrop-filter:blur(2px)}
       <label>지금 작업 내용 보관</label>
       <div class="inline">
         <input type="text" id="stashmsg" placeholder="메모 (선택)  예: 작업 중 UI 수정">
-        <button class="btn primary" id="btn-stashnow">보관하기</button>
+        <button class="btn accent" id="btn-stashnow">보관하기</button>
       </div>
       <label class="check"><input type="checkbox" id="stashuntracked" checked>
         <span>추적 안 된 새 파일도 함께 보관
@@ -439,12 +226,32 @@ dialog::backdrop{background:rgba(25,25,25,.34);backdrop-filter:blur(2px)}
       </label>
     </div>
     <div class="group">
-      <label>보관된 항목 <span id="stashcount" style="color:var(--text-3);font-weight:500"></span></label>
+      <label>보관된 항목 <span id="stashcount" class="soft"></span></label>
       <div class="stashlist" id="stashlist"></div>
     </div>
   </div>
   <div class="dlg-foot">
     <button class="btn" id="btn-stashclose">닫기</button>
+  </div>
+</dialog>
+
+<dialog id="helpdlg">
+  <div class="dlg-head">
+    <h2>단축키</h2>
+    <p>입력창에 커서가 없을 때 동작합니다.</p>
+  </div>
+  <div class="dlg-body">
+    <dl class="keys">
+      <dt><kbd>/</kbd></dt><dd>검색창 포커스</dd>
+      <dt><kbd>R</kbd></dt><dd>다시 검색 (네트워크 없음)</dd>
+      <dt><kbd>F</kbd></dt><dd>모든 저장소 원격 확인 (fetch)</dd>
+      <dt><kbd>,</kbd></dt><dd>설정 열기</dd>
+      <dt><kbd>Esc</kbd></dt><dd>창·메뉴 닫기</dd>
+    </dl>
+    <p class="muted">저장소별 rebase / merge / 보관은 각 행의 <b>⋯</b> 메뉴에 있습니다.</p>
+  </div>
+  <div class="dlg-foot">
+    <button class="btn" id="btn-helpclose">닫기</button>
   </div>
 </dialog>
 
@@ -460,10 +267,27 @@ const STATE_LABEL = {
 };
 const PILL_CLASS = { behind:"behind", diverged:"diverged", clean:"clean", dirty:"dirty", ahead:"ahead", error:"error" };
 const BUSY_LABEL = { pull: "업데이트 중", fetch: "확인 중", stash: "보관 처리 중" };
+const VIEW_TITLE = { repos: "Repositories", activity: "Activity" };
+const THEME_ORDER = ["light", "dark", "auto"];
+const THEME_LABEL = { light: "밝게", dark: "어둡게", auto: "시스템 따라" };
+const THEME_ICON = {
+  light: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6 17 7M7 17l-1.4 1.4"/></svg>',
+  dark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a7 7 0 1 0 10.5 10.5z"/></svg>',
+  auto: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 0 0 16z" fill="currentColor" stroke="none"/></svg>',
+};
+const REPO_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M7 21h10M8 8h5"/></svg>';
+const byName = (a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+const SORTS = {
+  priority: (a, b) => a.rank - b.rank || byName(a, b),
+  recent: (a, b) => (b.last_fetch || 0) - (a.last_fetch || 0) || byName(a, b),
+  name: byName,
+};
 
 let snap = null;            // 서버 상태
 let filter = "all";
 let query = "";
+let view = "repos";
+let sortBy = "priority";
 let openMenu = null;
 let firstLoad = true;
 const rows = new Map();     // path -> {node, refs}
@@ -504,7 +328,7 @@ function visible() {
     }
     return true;
   });
-  items.sort((a, b) => a.rank - b.rank || a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+  items.sort(SORTS[sortBy] || SORTS.priority);
   return items;
 }
 
@@ -513,15 +337,20 @@ function render() {
   $("#subtitle").textContent = c.total
     ? `저장소 ${c.total}개 · 업데이트 ${c.update}개 · 로컬 변경 ${c.dirty}개`
     : (snap.scanning ? "저장소를 찾고 있습니다…" : "저장소를 찾지 못했습니다");
+  $("#wsinfo").textContent = `폴더 ${snap.config.roots.length}개 · 저장소 ${c.total}개`;
   const chipCounts = { all: c.total, update: c.update, dirty: c.dirty, clean: c.clean, issue: c.issue };
   document.querySelectorAll(".chip").forEach((ch) => {
+    const on = ch.dataset.f === filter;
     ch.querySelector("b").textContent = chipCounts[ch.dataset.f] ?? "";
-    ch.classList.toggle("on", ch.dataset.f === filter);
+    ch.classList.toggle("on", on);
+    ch.setAttribute("aria-selected", on ? "true" : "false");
   });
+  $("#navcount").textContent = c.update || "";
   $("#allcount").textContent = c.update ? ` ${c.update}` : "";
   $("#btn-updateall").disabled = !c.update || snap.scanning;
   $("#strategy").value = snap.config.pull_strategy;
   $("#gitver").textContent = snap.app.git.replace("git version ", "git ");
+  syncNav();
 
   $("#progress").classList.toggle("on", !!snap.working);
   if (snap.scanning && snap.total) setStatus(`상태 확인 중 ${snap.total - snap.pending}/${snap.total}`, true);
@@ -530,6 +359,7 @@ function render() {
   else setStatus(c.update ? `${c.update}개 저장소에 받을 커밋이 있습니다` : "모두 최신 상태입니다", false);
 
   renderList();
+  renderTally();
   renderLogs();
   firstLoad = false;
 }
@@ -554,7 +384,7 @@ function renderList() {
     if (!snap.config.roots.length) {
       box.append(el("h3", null, "검색할 폴더가 없습니다"));
       box.append(el("p", null, "git 저장소가 모여 있는 폴더를 추가하면 목록이 채워집니다."));
-      const b = el("button", "btn primary", "폴더 추가");
+      const b = el("button", "btn accent", "폴더 추가");
       b.onclick = openSettings;
       box.append(b);
     } else if (snap.repos.length) {
@@ -586,11 +416,17 @@ function renderList() {
 function buildRow(r) {
   const node = el("article", "repo");
   node.dataset.path = r.path;
+
+  const badge = el("span", "repo-icon");
+  badge.innerHTML = REPO_ICON;
+
   const body = el("div", "body");
   const row1 = el("div", "row1");
   const name = el("h3", "name");
+  const branch = el("span", "branch");
   const pill = el("span", "pill");
-  row1.append(name, pill);
+  const dot = el("span", "dot");
+  row1.append(name, branch, pill, dot);
   const meta = el("div", "meta");
   const path = el("div", "path");
   const note = el("div", "note");
@@ -598,16 +434,17 @@ function buildRow(r) {
   body.append(row1, meta, path, note);
 
   const side = el("div", "side");
-  const update = el("button", "btn primary");
+  const when = el("span", "when");
+  const update = el("button", "btn");
   update.onclick = () => doPull(r.path);
   const more = el("button", "btn icon quiet");
   more.setAttribute("aria-label", "추가 작업");
   more.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/></svg>';
   more.onclick = (ev) => showMenu(ev, r.path);
-  side.append(update, more);
+  side.append(when, update, more);
 
-  node.append(body, side);
-  return { node, name, pill, meta, path, note, update, more };
+  node.append(badge, body, side);
+  return { node, name, branch, pill, meta, path, note, when, update, more };
 }
 
 function busyInfo(r) {
@@ -616,37 +453,45 @@ function busyInfo(r) {
   return { kind, mode: mode || "", label: BUSY_LABEL[kind] || "진행 중" };
 }
 
+/* 배지가 개수를 들고 간다. 같은 숫자를 아래 줄과 버튼에서 반복하지 않는다. */
+function pillText(r) {
+  if (r.state === "behind") return `업데이트 ${r.behind}`;
+  if (r.state === "ahead") return `푸시 대기 ${r.ahead}`;
+  return STATE_LABEL[r.state] || "";
+}
+
 function updateRow(row, r) {
   const { node } = row;
   const busy = busyInfo(r);
   node.dataset.state = r.state;
   node.classList.toggle("busy", !!busy);
   row.name.textContent = r.name;
-  row.pill.textContent = busy ? busy.label : (STATE_LABEL[r.state] || "");
+  row.branch.textContent = r.state === "loading" ? "-" : (r.detached ? "HEAD " + r.branch : (r.branch || "-"));
+  row.pill.textContent = busy ? busy.label : pillText(r);
   row.pill.className = "pill " + (busy ? "behind" : (PILL_CLASS[r.state] || ""));
   row.path.textContent = r.display_path;
+  row.when.textContent = r.fetch_age || "";
 
   row.meta.replaceChildren();
   const add = (text, cls) => { if (text) row.meta.append(el("span", cls || null, text)); };
   const dot = () => row.meta.append(el("span", "sep", "·"));
+  const first = () => row.meta.childElementCount && dot();
   if (r.state === "loading") { add("상태 확인 중…"); }
   else if (r.error) { add(r.error); }
   else {
-    add(r.detached ? "HEAD " + r.branch : r.branch);
-    if (r.behind) { dot(); add(`받을 커밋 ${r.behind}`, "num down"); }
-    if (r.ahead) { dot(); add(`보낼 커밋 ${r.ahead}`, "num up"); }
-    if (!r.upstream && !r.detached) { dot(); add("업스트림 없음"); }
-    if (r.changed) { dot(); add(`수정 ${r.changed}`); }
-    if (r.untracked) { dot(); add(`추적 안 됨 ${r.untracked}`); }
+    if (r.behind && r.state !== "behind") { add(`받을 커밋 ${r.behind}`, "num down"); }
+    if (r.ahead && r.state !== "ahead") { first(); add(`보낼 커밋 ${r.ahead}`, "num up"); }
+    if (!r.upstream && !r.detached) { first(); add("업스트림 없음"); }
+    if (r.changed) { first(); add(`수정 ${r.changed}`); }
+    if (r.untracked) { first(); add(`추적 안 됨 ${r.untracked}`); }
     if (r.stash_count) {
-      dot();
+      first();
       const b = el("button", "chipmini", `보관 ${r.stash_count}`);
       b.title = "보관(stash) 항목 관리";
       b.onclick = (ev) => { ev.stopPropagation(); openStash(r.path); };
       row.meta.append(b);
     }
-    if (!r.behind && !r.ahead && !r.dirty && r.upstream) { dot(); add("최신 상태"); }
-    if (r.fetch_age) { dot(); add("확인 " + r.fetch_age); }
+    if (!r.behind && !r.ahead && !r.dirty && r.upstream) { first(); add("최신 상태"); }
   }
 
   const res = r.result;
@@ -679,13 +524,13 @@ function updateRow(row, r) {
 
   const blocked = r.state === "loading" || r.state === "no-upstream" || r.state === "detached";
   row.update.disabled = blocked || !!busy;
-  row.update.classList.toggle("primary", r.has_update && !busy);
+  row.update.classList.toggle("accent", r.has_update && !busy);
   row.update.replaceChildren();
   if (busy) {
     row.update.append(el("span", "spin"));
     row.update.append(document.createTextNode(busy.kind === "pull" && busy.mode ? busy.mode : busy.label));
   } else {
-    row.update.textContent = r.has_update ? `업데이트 ${r.behind}` : "업데이트";
+    row.update.textContent = "업데이트";
     row.update.title = r.state === "no-upstream" ? "업스트림이 없어 받을 수 없습니다"
       : r.state === "detached" ? "HEAD 가 분리되어 있어 받을 수 없습니다"
       : r.diverged && snap.config.pull_strategy === "ff-only"
@@ -694,19 +539,85 @@ function updateRow(row, r) {
   }
 }
 
+function renderTally() {
+  const c = snap.counts;
+  $("#tallytitle").textContent = `전체 ${c.total}개`;
+  const box = $("#tallybody");
+  if ($("#tallyhead").getAttribute("aria-expanded") !== "true") return;
+  const buckets = new Map();
+  (snap.repos || []).forEach((r) => buckets.set(r.state, (buckets.get(r.state) || 0) + 1));
+  box.replaceChildren();
+  if (!buckets.size) {
+    box.append(el("p", "muted", "아직 집계할 저장소가 없습니다."));
+    return;
+  }
+  [...buckets.entries()].sort((a, b) => b[1] - a[1]).forEach(([state, n]) => {
+    const line = el("div", "tallyline");
+    line.dataset.state = state;
+    line.append(el("span", "dot"), el("span", "tallyname", STATE_LABEL[state] || state), el("b", "num", String(n)));
+    box.append(line);
+  });
+}
+
 function renderLogs() {
   const logs = snap.logs || [];
   $("#logcount").textContent = logs.length ? `${logs.length}줄` : "";
   const box = $("#logbody");
-  if (!$("#logcard").classList.contains("open")) return;
+  if (view !== "activity") return;
   const atBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 30;
   box.replaceChildren();
+  if (!logs.length) {
+    box.append(el("p", "muted", "아직 실행 기록이 없습니다."));
+    return;
+  }
   logs.forEach((l) => {
     const line = el("div", "logline " + (l.level || "info"));
     line.append(el("span", "ts", l.t), el("span", "msg", l.text));
     box.append(line);
   });
   if (atBottom) box.scrollTop = box.scrollHeight;
+}
+
+/* ---------------- 화면 밝기 ---------------- */
+/* 기본값은 light. 서버(config.json)에 저장하므로 다시 켜도 유지된다. */
+const systemDark = matchMedia("(prefers-color-scheme: dark)");
+let theme = document.querySelector('meta[name=gitupdate-theme]').content;
+
+function applyTheme(pref) {
+  theme = THEME_ORDER.includes(pref) ? pref : "light";
+  const dark = theme === "dark" || (theme === "auto" && systemDark.matches);
+  document.documentElement.classList.toggle("dark", dark);
+  const next = THEME_ORDER[(THEME_ORDER.indexOf(theme) + 1) % THEME_ORDER.length];
+  const btn = $("#btn-theme");
+  btn.innerHTML = THEME_ICON[theme];
+  btn.append(el("span", null, THEME_LABEL[theme]));
+  btn.title = `화면 밝기: ${THEME_LABEL[theme]} · 눌러서 ${THEME_LABEL[next]}`;
+  btn.setAttribute("aria-label", btn.title);
+}
+systemDark.addEventListener("change", () => { if (theme === "auto") applyTheme("auto"); });
+$("#btn-theme").onclick = async () => {
+  const next = THEME_ORDER[(THEME_ORDER.indexOf(theme) + 1) % THEME_ORDER.length];
+  applyTheme(next);
+  try { await api("/api/config", { theme: next }); } catch (e) {}
+};
+applyTheme(theme);
+
+/* ---------------- 화면 이동 ---------------- */
+function syncNav() {
+  document.querySelectorAll(".nav-item").forEach((n) => {
+    const on = n.dataset.view === view
+      && (!n.dataset.filter || n.dataset.filter === filter || (n.dataset.filter === "all" && filter !== "update"));
+    n.classList.toggle("on", !!on);
+    if (on) n.setAttribute("aria-current", "page");
+    else n.removeAttribute("aria-current");
+  });
+}
+function setView(next) {
+  view = next;
+  document.body.dataset.view = view;
+  $("#viewtitle").textContent = VIEW_TITLE[view] || "Repositories";
+  syncNav();
+  if (snap) renderLogs();
 }
 
 /* ---------------- 동작 ---------------- */
@@ -807,7 +718,7 @@ function showMenu(ev, path) {
   const mg = item("merge 로 업데이트", ico.merge, () => doPull(path, "merge"));
   rb.title = "git pull --rebase --autostash";
   mg.title = "git pull --no-rebase --no-edit";
-  if (blocked) { rb.disabled = true; mg.disabled = true; rb.style.opacity = mg.style.opacity = ".45"; }
+  if (blocked) { rb.disabled = true; mg.disabled = true; }
   m.append(rb, mg);
   m.append(document.createElement("hr"));
   m.append(item("지금 변경 보관 (stash)", ico.box, () => doStash(path, "push", "", "", true)));
@@ -829,6 +740,8 @@ function showMenu(ev, path) {
 function closeMenu() { if (openMenu) { openMenu.remove(); openMenu = null; } }
 addEventListener("click", closeMenu);
 addEventListener("keydown", (e) => { if (e.key === "Escape") closeMenu(); });
+/* 목록이 자체 스크롤 영역이라 스크롤이 시작되면 메뉴를 닫는다 (capture 로 내부 스크롤까지 잡는다) */
+addEventListener("scroll", closeMenu, true);
 
 /* ---------------- 설정 ---------------- */
 function openSettings() {
@@ -963,7 +876,7 @@ $("#btn-stashnow").onclick = async () => {
 };
 $("#btn-stashclose").onclick = () => $("#stashdlg").close();
 
-/* ---------------- 상단 버튼 ---------------- */
+/* ---------------- 상단·사이드 버튼 ---------------- */
 $("#btn-refresh").onclick = async () => { await api("/api/refresh", { fetch: false }); bump(); };
 $("#btn-fetch").onclick = async () => {
   await api("/api/refresh", { fetch: true });
@@ -981,38 +894,63 @@ $("#btn-updateall").onclick = async () => {
   await api("/api/pull-all", {});
   bump();
 };
-$("#btn-settings").onclick = openSettings;
+$("#btn-workspace").onclick = openSettings;
+$("#btn-help").onclick = () => $("#helpdlg").showModal();
+$("#btn-helpclose").onclick = () => $("#helpdlg").close();
 $("#btn-quit").onclick = async () => {
   if (!confirm("Git Update 서버를 종료합니다. 이 탭은 닫아도 됩니다.")) return;
   try { await api("/api/quit", {}); } catch (e) {}
-  document.body.innerHTML = '<div class="empty" style="margin:120px auto;max-width:420px"><h3>종료했습니다</h3><p>이 탭을 닫으세요. 다시 쓰려면 GitUpdate.command 를 실행하면 됩니다.</p></div>';
+  document.body.innerHTML = '<div class="empty gone"><h3>종료했습니다</h3><p>이 탭을 닫으세요. 다시 쓰려면 GitUpdate.command 를 실행하면 됩니다.</p></div>';
 };
 $("#strategy").onchange = async (e) => {
   await api("/api/config", { pull_strategy: e.target.value });
   toast("ok", "업데이트 방식 변경", e.target.value);
   bump();
 };
-$("#search").addEventListener("input", (e) => { query = e.target.value.trim(); renderList(); });
+$("#sortby").onchange = (e) => { sortBy = e.target.value; if (snap) renderList(); };
+$("#search").addEventListener("input", (e) => { query = e.target.value.trim(); if (snap) renderList(); });
 $("#chips").addEventListener("click", (e) => {
   const chip = e.target.closest(".chip");
   if (!chip) return;
   filter = chip.dataset.f;
-  render();
+  if (snap) render();
 });
-const toggleLog = () => {
-  const card = $("#logcard");
-  card.classList.toggle("open");
-  $("#loghead").setAttribute("aria-expanded", card.classList.contains("open"));
-  renderLogs();
+$("#layout").addEventListener("click", (e) => {
+  const seg = e.target.closest(".seg");
+  if (!seg) return;
+  $("#list").classList.toggle("grid", seg.dataset.layout === "grid");
+  document.querySelectorAll("#layout .seg").forEach((b) => {
+    const on = b === seg;
+    b.classList.toggle("on", on);
+    b.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+});
+$("#nav").addEventListener("click", (e) => {
+  const item = e.target.closest(".nav-item");
+  if (!item) return;
+  if (item.dataset.act === "settings") { openSettings(); return; }
+  if (item.dataset.filter) filter = item.dataset.filter;
+  setView(item.dataset.view || "repos");
+  if (snap) render();
+});
+const toggleTally = () => {
+  const head = $("#tallyhead");
+  const open = head.getAttribute("aria-expanded") === "true";
+  head.setAttribute("aria-expanded", open ? "false" : "true");
+  $("#tally").classList.toggle("open", !open);
+  if (snap) renderTally();
 };
-$("#loghead").onclick = toggleLog;
-$("#loghead").addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleLog(); } });
+$("#tallyhead").onclick = toggleTally;
 
 addEventListener("keydown", (e) => {
   if (e.metaKey || e.ctrlKey || e.altKey) return;
   const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)
-    || $("#settings").open || $("#stashdlg").open;
-  if (e.key === "/" && !typing) { e.preventDefault(); $("#search").focus(); }
+    || $("#settings").open || $("#stashdlg").open || $("#helpdlg").open;
+  if (e.key === "/" && !typing) {
+    e.preventDefault();
+    if (view !== "repos") { setView("repos"); if (snap) render(); }  /* 검색창은 목록 화면에만 있다 */
+    $("#search").focus();
+  }
   else if ((e.key === "r" || e.key === "R") && !typing) $("#btn-refresh").click();
   else if ((e.key === "f" || e.key === "F") && !typing) $("#btn-fetch").click();
   else if (e.key === "," && !typing) { e.preventDefault(); openSettings(); }

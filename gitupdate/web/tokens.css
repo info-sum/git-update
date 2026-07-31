@@ -1,0 +1,378 @@
+/* =============================================================================
+ * quiet-observer-design / tokens.css
+ * -----------------------------------------------------------------------------
+ * Framework-agnostic design tokens. No Tailwind, no @apply, no imports.
+ * Drop this file into any project and link it before your own stylesheets.
+ *
+ * NAMING CONTRACT
+ *   1. shadcn/ui-compatible role names (--background, --card, --primary, ...)
+ *      so this file can replace a shadcn token block unchanged.
+ *   2. Additional --surface-0..3 levels that shadcn lacks. These are the
+ *      backbone of the Tonal Layering rule: depth comes from stacked surfaces,
+ *      not from drop shadows or 1px borders.
+ *
+ * THEMES
+ *   :root                  Atelier Light   (default)
+ *   .dark                  Atelier Dark
+ *   [data-theme="midnight"] Midnight       (near-black + indigo)
+ *   [data-theme="midnight"] is a single palette; it does not have a light pair.
+ *
+ * PROVENANCE
+ *   Atelier  = design/DESIGN.md + src/app/globals.css of the source project
+ *   Midnight = src/remotion/constants.ts of the source project
+ *   Values marked "derived" were filled to complete a ramp; the derivation is
+ *   stated inline. Everything else is carried over verbatim.
+ * ========================================================================== */
+
+:root {
+  color-scheme: light;
+
+  /* --- Surface levels (Tonal Layering) ----------------------------------- *
+   * Level 0 is the page. Each level up is the "closer to the user" surface.
+   * Never separate sections with a border; step one level instead.
+   * DESIGN.md prescribes a blue-tinted ramp (#f7f9ff / #edf4ff); globals.css
+   * shipped a neutral ramp. Both are provided: neutral is the default because
+   * it is what the source project actually renders. Swap in the blue ramp by
+   * uncommenting the block below it. */
+  --surface-0: #f5f5f5; /* page canvas            (globals.css:60) */
+  --surface-1: #ededed; /* sidebar, nested areas  (globals.css --secondary) */
+  --surface-2: #ffffff; /* primary content cards  (globals.css --card) */
+  --surface-3: #e5e7eb; /* active row, floating   (globals.css --sidebar-accent) */
+
+  /* Blue-tinted ramp from DESIGN.md:15,21-24. Uncomment to use.
+  --surface-0: #f7f9ff;
+  --surface-1: #edf4ff;
+  --surface-2: #ffffff;
+  --surface-3: #dce9fa;
+  */
+
+  /* --- Foreground roles -------------------------------------------------- */
+  --foreground: #131c29; /* never #000; see Do-not list */
+  --foreground-muted: #6b7280;
+  --foreground-subtle: #94a3b8; /* derived: globals.css dark --muted-foreground, reused as the lightest readable tone on light surfaces */
+
+  /* --- shadcn role aliases ---------------------------------------------- */
+  --background: var(--surface-0);
+  --card: var(--surface-2);
+  --card-foreground: var(--foreground);
+  --popover: var(--surface-2);
+  --popover-foreground: var(--foreground);
+  --muted: #fafafa;
+  --muted-foreground: var(--foreground-muted);
+  --secondary: var(--surface-1);
+  --secondary-foreground: var(--foreground);
+  --accent: var(--surface-1);
+  --accent-foreground: var(--foreground);
+
+  --primary: #353e4d;
+  --primary-foreground: #ffffff;
+
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+
+  /* --- Semantic status --------------------------------------------------- *
+   * Generalized from the source project's domain colors. */
+  --success: #10b981;
+  --success-foreground: #ffffff;
+  --warning: #f59e0b;
+  --warning-foreground: #131c29;
+  --danger: var(--destructive);
+  --danger-foreground: var(--destructive-foreground);
+  --inert: #d4d4d8; /* "present but not participating" fill */
+
+  /* --- Lines -------------------------------------------------------------- *
+   * --border exists for inputs and focus affordances, NOT for sectioning.
+   * For containers that need definition, use --ghost-border (15% alpha). */
+  --border: #d4d4d8;
+  --input: #d4d4d8;
+  --ring: #353e4d;
+  --ghost-border-alpha: 15%;
+
+  /* --- Charts ------------------------------------------------------------ */
+  --chart-1: #6366f1;
+  --chart-2: #3b82f6;
+  --chart-3: #8b5cf6;
+  --chart-4: #f59e0b;
+  --chart-5: #10b981;
+
+  /* --- Sidebar ----------------------------------------------------------- */
+  --sidebar: #f3f4f6;
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: #353e4d;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #e5e7eb;
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: #d1d5db;
+  --sidebar-ring: #353e4d;
+
+  /* --- Depth ------------------------------------------------------------- *
+   * Ultra-diffused and tinted with the darkest brand tone, never neutral grey.
+   * Height is felt, not seen. */
+  --shadow-ambient: 0 20px 40px rgba(19, 28, 41, 0.06);
+  --shadow-raised: 0 24px 60px rgba(19, 28, 41, 0.10);
+
+  /* --- Signature texture ------------------------------------------------- *
+   * Reserved for primary CTAs and hero accents. Flat hex cannot replicate it. */
+  --gradient-signature: linear-gradient(to right, #353e4d, #131c29);
+  --gradient-hairline: linear-gradient(
+    90deg,
+    rgba(19, 28, 41, 0) 0%,
+    rgba(19, 28, 41, 0.16) 50%,
+    rgba(19, 28, 41, 0) 100%
+  );
+
+  /* --- Glass ------------------------------------------------------------- */
+  --glass-fill: rgba(255, 255, 255, 0.72);
+  --glass-blur: 20px;
+}
+
+.dark {
+  color-scheme: dark;
+
+  --surface-0: #131c29;
+  --surface-1: #1e293b;
+  --surface-2: #1a2230;
+  --surface-3: #334155;
+
+  --foreground: #f8fafc;
+  --foreground-muted: #94a3b8;
+  --foreground-subtle: #64748b;
+
+  --background: var(--surface-0);
+  --card: var(--surface-2);
+  --card-foreground: var(--foreground);
+  --popover: var(--surface-2);
+  --popover-foreground: var(--foreground);
+  --muted: var(--surface-1);
+  --muted-foreground: var(--foreground-muted);
+  --secondary: #353e4d;
+  --secondary-foreground: var(--foreground);
+  --accent: #353e4d;
+  --accent-foreground: var(--foreground);
+
+  --primary: #ffffff;
+  --primary-foreground: #131c29;
+
+  --destructive: #7f1d1d;
+  --destructive-foreground: #ffffff;
+
+  --success: #34d399;
+  --success-foreground: #06251b; /* derived: darkened success for text-on-fill contrast */
+  --warning: #fcd34d;
+  --warning-foreground: #221a02; /* derived: darkened warning for text-on-fill contrast */
+  --danger: #f87171;
+  --danger-foreground: #2a0a0a; /* derived */
+  --inert: #3f3f46;
+
+  --border: #353e4d;
+  --input: #353e4d;
+  --ring: #edf4ff;
+
+  --chart-1: #818cf8;
+  --chart-2: #60a5fa;
+  --chart-3: #a78bfa;
+  --chart-4: #fcd34d;
+  --chart-5: #34d399;
+
+  --sidebar: #1e293b;
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: #ffffff;
+  --sidebar-primary-foreground: #131c29;
+  --sidebar-accent: #334155;
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: #334155;
+  --sidebar-ring: #edf4ff;
+
+  --shadow-ambient: 0 20px 40px rgba(0, 0, 0, 0.4);
+  --shadow-raised: 0 36px 96px rgba(0, 0, 0, 0.55);
+
+  --gradient-signature: linear-gradient(to right, #94a3b8, #e2e8f0);
+  --gradient-hairline: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.16) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+
+  --glass-fill: rgba(26, 34, 48, 0.66);
+}
+
+/* -----------------------------------------------------------------------------
+ * Midnight — near-black canvas with an indigo brand.
+ * Higher contrast and more saturated than Atelier. Suited to marketing surfaces,
+ * video, and full-bleed hero sections. Single palette, no light pair.
+ * -------------------------------------------------------------------------- */
+[data-theme="midnight"] {
+  color-scheme: dark;
+
+  --surface-0: #0a0a0a;
+  --surface-1: #131316;
+  --surface-2: #1b1b20;
+  --surface-3: #0e0e11; /* sunken, not raised: used for wells and track fills */
+
+  --foreground: #fafafa;
+  --foreground-muted: #a1a1aa;
+  --foreground-subtle: #8b8b94;
+
+  --background: var(--surface-0);
+  --card: var(--surface-1);
+  --card-foreground: var(--foreground);
+  --popover: var(--surface-2);
+  --popover-foreground: var(--foreground);
+  --muted: var(--surface-1);
+  --muted-foreground: var(--foreground-muted);
+  --secondary: var(--surface-2);
+  --secondary-foreground: var(--foreground);
+  --accent: rgba(99, 102, 241, 0.12);
+  --accent-foreground: #a5b4fc;
+
+  --primary: #6366f1;
+  --primary-foreground: #ffffff;
+  --primary-deep: #4338ca;
+  --primary-text: #a5b4fc; /* the brand tone that is legible AS text */
+
+  --destructive: #f87171;
+  --destructive-foreground: #2a0a0a;
+
+  --success: #34d399;
+  --success-foreground: #06251b;
+  --success-text: #6ee7b7;
+  --warning: #f59e0b;
+  --warning-foreground: #221a02;
+  --warning-text: #fcd34d;
+  --danger: #f87171;
+  --danger-foreground: #2a0a0a;
+  --danger-text: #fca5a5;
+  --inert: #3f3f46;
+
+  --border: #26262c;
+  --border-strong: #3a3a44;
+  --input: #26262c;
+  --ring: #6366f1;
+
+  --chart-1: #6366f1;
+  --chart-2: #8b5cf6;
+  --chart-3: #34d399;
+  --chart-4: #f59e0b;
+  --chart-5: #f87171;
+
+  --sidebar: var(--surface-1);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: #6366f1;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--surface-2);
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: #26262c;
+  --sidebar-ring: #6366f1;
+
+  --shadow-ambient: 0 24px 60px rgba(0, 0, 0, 0.45);
+  --shadow-raised: 0 36px 96px rgba(0, 0, 0, 0.55);
+  --shadow-brand-glow: 0 22px 64px rgba(99, 102, 241, 0.34);
+
+  --gradient-signature: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  --gradient-signature-soft: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.22) 0%,
+    rgba(139, 92, 246, 0.1) 100%
+  );
+  --gradient-hairline: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.16) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  --glow-brand: radial-gradient(
+    circle,
+    rgba(99, 102, 241, 0.2) 0%,
+    rgba(99, 102, 241, 0.06) 45%,
+    rgba(10, 10, 10, 0) 70%
+  );
+  /* For title cards where the glow is the only depth cue. */
+  --glow-hero: radial-gradient(
+    circle,
+    rgba(99, 102, 241, 0.34) 0%,
+    rgba(129, 108, 245, 0.13) 40%,
+    rgba(10, 10, 10, 0) 68%
+  );
+
+  --glass-fill: rgba(255, 255, 255, 0.035);
+}
+
+/* =============================================================================
+ * Theme-independent scales
+ * ========================================================================== */
+
+:root {
+  /* --- Type ramp --------------------------------------------------------- *
+   * rem values for UI. For fixed-canvas output (video, PDF, email) use the px
+   * ramp in tokens.ts instead: rem does not exist there. */
+  --text-display: 3.75rem;
+  --text-h1: 2.5rem;
+  --text-h2: 1.875rem;
+  --text-h3: 1.5rem;
+  --text-h4: 1.25rem;
+  --text-body: 1rem;
+  --text-body-sm: 0.875rem;
+  --text-label: 0.75rem;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-bold: 700;
+  --weight-black: 900;
+
+  /* Latin display can go tight; CJK body must not. See SKILL.md. */
+  --leading-tight: 1.14;
+  --leading-snug: 1.3;
+  --leading-normal: 1.45;
+  --leading-relaxed: 1.55;
+
+  --tracking-tighter: -0.04em;
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0em;
+  --tracking-wide: 0.06em;
+  --tracking-widest: 0.2em; /* the all-caps label convention */
+
+  /* --- Spacing ----------------------------------------------------------- */
+  --space-xxs: 0.375rem;
+  --space-xs: 0.625rem;
+  --space-sm: 0.875rem;
+  --space-md: 1.25rem;
+  --space-lg: 1.75rem;
+  --space-xl: 2.5rem;
+  --space-xxl: 3.5rem;
+  --space-xxxl: 4.75rem;
+  --space-huge: 6.5rem;
+
+  /* --- Radius ------------------------------------------------------------ */
+  --radius: 0.625rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-pill: 9999px;
+
+  --border-hairline: 1px;
+  --border-thick: 2px;
+
+  /* --- Motion ------------------------------------------------------------ *
+   * One shared curve. Reach for --ease-out unless you have a reason. */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --duration-flash: 120ms;
+  --duration-quick: 180ms;
+  --duration-base: 200ms; /* the house default */
+  --duration-slow: 300ms; /* upper bound for UI feedback */
+  --duration-exit: 160ms; /* exits are faster than entrances */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-flash: 1ms;
+    --duration-quick: 1ms;
+    --duration-base: 1ms;
+    --duration-slow: 1ms;
+    --duration-exit: 1ms;
+  }
+}

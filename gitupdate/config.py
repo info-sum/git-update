@@ -48,6 +48,10 @@ DEFAULT_EXCLUDES = [
 
 PULL_STRATEGIES = ["ff-only", "rebase", "merge"]
 
+# 화면 밝기. 기본은 밝게 — OS 가 다크 모드여도 밝은 화면으로 시작한다.
+# auto 를 고르면 그때부터 시스템 설정을 따라간다.
+THEMES = ["light", "dark", "auto"]
+
 
 @dataclass
 class Config:
@@ -57,6 +61,7 @@ class Config:
     pull_strategy: str = "ff-only"
     autostash: bool = True
     fetch_on_start: bool = True
+    theme: str = "light"
     show_log: bool = True
     workers: int = 8
 
@@ -101,6 +106,8 @@ class Config:
         self.max_depth = max(1, min(int(self.max_depth), 8))
         if self.pull_strategy not in PULL_STRATEGIES:
             self.pull_strategy = "ff-only"
+        if self.theme not in THEMES:
+            self.theme = "light"
         self.workers = max(1, min(int(self.workers), 16))
 
 
