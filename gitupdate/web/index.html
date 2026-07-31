@@ -16,14 +16,7 @@
 })();
 </script>
 <style>
-/* 토큰 인증이 붙은 주소라서 폰트 선언은 토큰이 치환되는 이 블록에 둔다. */
-@font-face{
-  font-family:"Cafe24 PRO UP";
-  src:url("/fonts/Cafe24PROUP.otf?t=__TOKEN__") format("opentype");
-  font-weight:100 900;   /* 단일 굵기 서체 — 가짜 볼드를 만들지 않는다 */
-  font-style:normal;
-  font-display:swap;
-}
+/* 토큰 인증이 붙은 주소라서 스타일시트 경로에도 토큰이 필요하다. */
 </style>
 <link rel="stylesheet" href="/tokens.css?t=__TOKEN__">
 <link rel="stylesheet" href="/quiet-observer.css?t=__TOKEN__">

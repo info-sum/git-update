@@ -7,7 +7,7 @@
   /* Cafe24 PRO UP ships one heavy weight, so it carries the display roles —
    * brand, titles, names, buttons, badges, every number. Secondary prose stays
    * on the system face where 12px has to stay legible. */
-  --app-font-display: "Cafe24 PRO UP", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", system-ui, sans-serif;
+  --app-font-display: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", system-ui, sans-serif;
   --app-font-body: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", system-ui, sans-serif;
   --app-font-mono: ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
 

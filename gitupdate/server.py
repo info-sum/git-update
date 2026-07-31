@@ -47,7 +47,6 @@ IDLE_TIMEOUT = 900.0  # 브라우저에서 15분간 아무 요청이 없으면 �
 STATIC_FILES = {
     "/tokens.css": "text/css; charset=utf-8",
     "/quiet-observer.css": "text/css; charset=utf-8",
-    "/fonts/Cafe24PROUP.otf": "font/otf",
 }
 
 
